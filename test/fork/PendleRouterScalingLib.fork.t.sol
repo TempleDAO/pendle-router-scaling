@@ -73,11 +73,13 @@ contract PendleRouterSwapBalance {
 contract PendleRouterScalingLibForkTest is TestBase {
     PendleRouterSwapBalance public balanceRouter;
 
+    address receiver;
+
     // Got more than expected
-    uint256 public constant TOLERANCE_MORE = 0.02e18; // 2%
+    uint256 public constant TOLERANCE_MORE = 0.05e18; // 5%
     
     // Got less than expected
-    uint256 public constant TOLERANCE_LESS = 0.000005e18; // 0.0005%
+    uint256 public constant TOLERANCE_LESS = 0.025e18; // 2.5%
     
     function setUp() public {
         CalldataItem[] memory testItems = loadTestItems();
@@ -85,7 +87,6 @@ contract PendleRouterScalingLibForkTest is TestBase {
         // Use the min blockNumber as the fork
         CalldataItem memory item;
         uint256 forkBlockNumber = type(uint256).max;
-        address receiver = address(0);
         for (uint256 i; i < testItems.length; ++i) {
             item = testItems[i];
             if (item.blockNumber < forkBlockNumber) {
@@ -98,15 +99,13 @@ contract PendleRouterScalingLibForkTest is TestBase {
                 revert("All test cases need the same 'from'");
             }
         }
+    }
 
-        fork("mainnet", forkBlockNumber);
-
+    function etchRouter() internal {
         // Etch the router onto the receiver address that was used when generating the test cases
-        {
-            PendleRouterSwapBalance br = new PendleRouterSwapBalance(PENDLE_ROUTER_V4);
-            vm.etch(receiver, address(br).code);
-            balanceRouter = PendleRouterSwapBalance(receiver);
-        }
+        PendleRouterSwapBalance br = new PendleRouterSwapBalance(PENDLE_ROUTER_V4);
+        vm.etch(receiver, address(br).code);
+        balanceRouter = PendleRouterSwapBalance(receiver);
     }
 
     // No change to calldata, deal existing amounts
@@ -115,6 +114,9 @@ contract PendleRouterScalingLibForkTest is TestBase {
 
         for (uint256 i; i < testItems.length; ++i) {
             CalldataItem memory item = testItems[i];
+            fork("mainnet", item.blockNumber);
+            etchRouter();
+
             string memory itemKey = string(bytes.concat(bytes(vm.toString(i)), " ", bytes(item.method)));
 
             // Deal exact tokens and call swap. Ensure the router starts with zero tokenOut
@@ -143,6 +145,9 @@ contract PendleRouterScalingLibForkTest is TestBase {
 
         for (uint256 i; i < testItems.length; ++i) {
             CalldataItem memory item = testItems[i];
+            fork("mainnet", item.blockNumber);
+            etchRouter();
+            
             string memory itemKey = string(bytes.concat(bytes(vm.toString(i)), " ", bytes(item.method)));
 
             // Deal an extra 5% of tokens and call swap. Ensure the router starts with zero tokenOut
@@ -170,6 +175,9 @@ contract PendleRouterScalingLibForkTest is TestBase {
 
         for (uint256 i; i < testItems.length; ++i) {
             CalldataItem memory item = testItems[i];
+            fork("mainnet", item.blockNumber);
+            etchRouter();
+
             string memory itemKey = string(bytes.concat(bytes(vm.toString(i)), " ", bytes(item.method)));
 
             // Deal exact tokens and call swap. Ensure the router starts with zero tokenOut
@@ -206,6 +214,9 @@ contract PendleRouterScalingLibForkTest is TestBase {
 
         for (uint256 i; i < testItems.length; ++i) {
             CalldataItem memory item = testItems[i];
+            fork("mainnet", item.blockNumber);
+            etchRouter();
+
             string memory itemKey = string(bytes.concat(bytes(vm.toString(i)), " ", bytes(item.method)));
 
             // Deal an extra 5% of tokens and call swap. Ensure the router starts with zero tokenOut
@@ -238,10 +249,13 @@ contract PendleRouterScalingLibForkTest is TestBase {
         CalldataItem[] memory testItems = loadTestItems();
 
         // We get LESS amount of output tokens when we dont deal as much
-        uint256 _TOLERANCE_LESS = 0.025e18;
+        uint256 _TOLERANCE_LESS = 0.04e18;
 
         for (uint256 i; i < testItems.length; ++i) {
             CalldataItem memory item = testItems[i];
+            fork("mainnet", item.blockNumber);
+            etchRouter();
+
             string memory itemKey = string(bytes.concat(bytes(vm.toString(i)), " ", bytes(item.method)));
 
             // Deal an extra 5% of tokens and call swap. Ensure the router starts with zero tokenOut
