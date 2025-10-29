@@ -16,7 +16,7 @@ import {BytesLib} from "./BytesLib.sol";
 ///   - Some functions are not supported, notably `swapTokensToTokens()` when trying to convert 2 non-pendle tokens.
 ///   - See `_offsetMappings()` for a list of supported Pendle Router functions, as well as the composite `callAndReflect()`
 library PendleRouterScalingLib {
-    error UnsupportedSelector(bytes4 seleector);
+    error UnsupportedSelector(bytes4 selector);
 
     /// @dev Adjust the `callData` such that
     ///  - The 'from' token amount is set to `newSellAmount`
