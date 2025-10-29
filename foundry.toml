@@ -1,2 +1,9 @@
-[profile.ci.fuzz]
-runs = 10_000
+[profile.default]
+  verbosity = 3
+
+  fs_permissions = [
+    { access = "read", path = "./test/calldata.json" }
+  ]
+
+[lint]
+  ignore = ["test/**/*.sol"]

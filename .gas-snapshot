@@ -1,1 +1,4 @@
-TestContract:testBar() (gas: 401)
+PendleRouterScalingLibTest:test_all_fromJson() (gas: 3353452)
+PendleRouterScalingLibTest:test_badCalldataOffset() (gas: 13929)
+PendleRouterScalingLibTest:test_badCalldataShort() (gas: 14055)
+PendleRouterScalingLibTest:test_noAmountChange() (gas: 1457446)
