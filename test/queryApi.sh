@@ -14,38 +14,38 @@ RECEIVER="0x8EB8a3b98659Cce290402893d0123abb75E3ab28"
 # Set to something quite high. In practice we check slippage
 # at the end of a bundle not at each step.
 # But we need to check its scaled correctly.
-SLIPPAGE="0.2"
+SLIPPAGE="0.3"
 
 # KYBER REQUESTS:
 # for 'mintSyFromToken' - it should respect the needScale passed in
 
 # Need to split up by a sleep so we dont get rate limited
 declare -a conversions=(
-  'sUSDe 10000 PT_sUSDe_Nov' # swap - swapExactTokenForPt
-  'PT_sUSDe_Nov 10000 sUSDe' # swap - swapExactPtForToken
-  'sUSDe 10000 YT_sUSDe_Nov' # swap - swapExactTokenForYt
-  'YT_sUSDe_Nov 10000 sUSDe' # swap - swapExactYtForToken
-  'USDC 10000 PT_USDe_Nov' # swap - swapExactTokenForPt
-  'PT_USDe_Nov 10000 USDC' # swap - swapExactPtForToken
-  'USDC 10000 YT_sUSDe_Nov' # swap - swapExactTokenForYt
+  # 'sUSDe 10000 PT_sUSDe_Nov' # swap - swapExactTokenForPt
+  # 'PT_sUSDe_Nov 10000 sUSDe' # swap - swapExactPtForToken
+  # 'sUSDe 10000 YT_sUSDe_Nov' # swap - swapExactTokenForYt
+  # 'YT_sUSDe_Nov 10000 sUSDe' # swap - swapExactYtForToken
+  # 'USDC 10000 PT_USDe_Nov' # swap - swapExactTokenForPt
+  # 'PT_USDe_Nov 10000 USDC' # swap - swapExactPtForToken
+  # 'USDC 10000 YT_sUSDe_Nov' # swap - swapExactTokenForYt
   'YT_sUSDe_Nov 10000 USDC' # swap - swapExactYtForToken
-  'SY_sUSDe_Nov 10000 PT_sUSDe_Nov' # swap - swapExactSyForPt
-  'PT_sUSDe_Nov 10000 SY_sUSDe_Nov' # swap - swapExactPtForSy
-  'SY_sUSDe_Nov 10000 YT_sUSDe_Nov' # swap - swapExactSyForYt
-  'YT_sUSDe_Nov 10000 SY_sUSDe_Nov' # swap - swapExactYtForSy
-  ## 'PT_sUSDe_Nov 10000 YT_sUSDe_Nov' # Pendle aggregator cant route this
-  ## 'YT_sUSDe_Nov 10000 PT_sUSDe_Nov' # Pendle aggregator cant route this
-  'SY_sUSDe_Nov 10000 USDC' # redeem-sy - redeemSyToToken
-  'USDC 10000 SY_sUSDe_Nov' # mint-sy - mintSyFromToken
-  'PT_USDe_Nov 10000 PT_sUSDe_Nov' # roll-over-pt - callAndReflect
-  'PT_sUSDe_Nov 10000 PT_USDe_Nov' # roll-over-pt - callAndReflect
-  'USDC 10000 sUSDe' # pendle-swap - swapTokensToTokens
-  'sUSDe 10000 USDC' # pendle-swap - swapTokensToTokens
-  # Expired market exit
-  'PT_sUSDe_Sep 10000 sUSDe' # (redeem-py - redeemPyToToken)
-  'PT_sUSDe_Sep 10000 USDe' #  (redeem-py - redeemPyToToken)
-  'PT_sUSDe_Sep 10000 USDC' #  (redeem-py - redeemPyToToken)
-  ## sUSDe 10000 PT_sUSDe_Sep'  NOT POSSIBLE BECAUSE ITS EXPIRED
+  # 'SY_sUSDe_Nov 10000 PT_sUSDe_Nov' # swap - swapExactSyForPt
+  # 'PT_sUSDe_Nov 10000 SY_sUSDe_Nov' # swap - swapExactPtForSy
+  # 'SY_sUSDe_Nov 10000 YT_sUSDe_Nov' # swap - swapExactSyForYt
+  # 'YT_sUSDe_Nov 10000 SY_sUSDe_Nov' # swap - swapExactYtForSy
+  # ## 'PT_sUSDe_Nov 10000 YT_sUSDe_Nov' # Pendle aggregator cant route this
+  # ## 'YT_sUSDe_Nov 10000 PT_sUSDe_Nov' # Pendle aggregator cant route this
+  # 'SY_sUSDe_Nov 10000 USDC' # redeem-sy - redeemSyToToken
+  # 'USDC 10000 SY_sUSDe_Nov' # mint-sy - mintSyFromToken
+  # 'PT_USDe_Nov 10000 PT_sUSDe_Nov' # roll-over-pt - callAndReflect
+  # 'PT_sUSDe_Nov 10000 PT_USDe_Nov' # roll-over-pt - callAndReflect
+  # 'USDC 10000 sUSDe' # pendle-swap - swapTokensToTokens
+  # 'sUSDe 10000 USDC' # pendle-swap - swapTokensToTokens
+  # # Expired market exit
+  # 'PT_sUSDe_Sep 10000 sUSDe' # (redeem-py - redeemPyToToken)
+  # 'PT_sUSDe_Sep 10000 USDe' #  (redeem-py - redeemPyToToken)
+  # 'PT_sUSDe_Sep 10000 USDC' #  (redeem-py - redeemPyToToken)
+  # ## sUSDe 10000 PT_sUSDe_Sep'  NOT POSSIBLE BECAUSE ITS EXPIRED
 )
 
 tokenAddr() {

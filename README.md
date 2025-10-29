@@ -16,7 +16,7 @@ The available functions on the router are registered via their governance, but a
 
 The normal flow for integrations is:
 
-1. Generate calldata via [/convert/](https://api-v2.pendle.finance/core/docs#/SDK/SdkController_convert) on the Pendle API v2
+1. Generate calldata via [/convert](https://api-v2.pendle.finance/core/docs#/SDK/SdkController_convert) on the Pendle API v2
 2. Perform a low level call on the Pendle Router with that generated calldata
 
 Internally within the Pendle router, some of the multi-step actions can 'scale' to the full balance received. Eg if you swap from USDC->USDe then mint PT with the USDe, it can use the entire balance of the USDe.
@@ -61,9 +61,19 @@ error UnsupportedSelector(bytes4 selector);
 
 The implementation is gas efficient - there are no unnecessary memory copies or abi encoding/decoding. It utilizes the known offsets of the required parameters to be updated. Careful inspection has been done to ensure its not relying on any dynamic offset positions.
 
+## Known Issues
+
+The current implementation doesn't work with these functions:
+
+1. `mintSyFromToken`: The Pendle API v2 `/convert` does not respect the `needScale` argument when passed in. It leaves it in the calldata as false, meaning internal swaps dont get scaled correctly. Pendle need to correct this in their API, or we make the contract less efficient. 
+   1. Right now it doesn't do a full abi.encode/decode as that's quite gas intensive. However the `input.swap.needsScale` is _after_ dynamic sized bytes -- so it's more complicated to update the bytes in place (deriving the offset is harder, or we do a full decode then encode)
+   2. It is unlikely we'll need this function though - so elected to skip fixing it
+2. `swapTokensToTokens`: Pendle provide an 'aggregator of aggregators' much like [https://swap.defillama.com/](https://swap.defillama.com/). So you can swap from one token to any others and they scale the input. However when called via the `/convert` API, the `swapTokensToTokens` hardcodes `needsScale=false`
+   1. If required, the caller would need to implement this themselves from first principles - Pendle confirmed they wont update this.
+
 ## Tests
 
-The tests run over multiple combinations of responses from the Pendle API v2 `/convert/` endpoint.
+The tests run over multiple combinations of responses from the Pendle API v2 `/convert` endpoint.
 
 You can see the current test cases in [test/calldata.json](./test/calldata.json)
 

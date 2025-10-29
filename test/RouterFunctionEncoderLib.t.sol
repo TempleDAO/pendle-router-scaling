@@ -4,8 +4,32 @@ pragma solidity ^0.8.17;
 import {IPActionMiscV3} from "pendle-core-v2-public/contracts/interfaces/IPActionMiscV3.sol";
 import {IPActionSwapPTV3} from "pendle-core-v2-public/contracts/interfaces/IPActionSwapPTV3.sol";
 import {IPActionSwapYTV3} from "pendle-core-v2-public/contracts/interfaces/IPActionSwapYTV3.sol";
-
-import "./RouterFunctionTypes.t.sol";
+import {
+    SwapExactTokenForPt,
+    SwapExactPtForToken,
+    SwapExactTokenForYt,
+    SwapExactYtForToken,
+    SwapExactSyForPt,
+    SwapExactPtForSy,
+    SwapExactSyForYt,
+    SwapExactYtForSy,
+    RedeemSyToToken,
+    MintSyFromToken,
+    CallAndReflect,
+    RedeemPyToToken,
+    SwapTokensToTokens
+} from "./RouterFunctionTypes.t.sol";
+import {
+    ApproxParams,
+    TokenInput,
+    TokenOutput,
+    LimitOrderData
+} from "pendle-core-v2-public/contracts/interfaces/IPAllActionTypeV3.sol";
+import {
+    SwapData,
+    IPSwapAggregator,
+    SwapDataExtra
+} from "pendle-core-v2-public/contracts/router/swap-aggregator/IPSwapAggregator.sol";
 
 library RouterFunctionEncoderLib {
     error WrongSelector(bytes4 expected, bytes4 got);
