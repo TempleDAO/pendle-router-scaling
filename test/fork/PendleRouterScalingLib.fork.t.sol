@@ -6,7 +6,7 @@ import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol
 import {stdError} from "forge-std/StdError.sol";
 
 import {PendleRouterScalingLib} from "src/PendleRouterScalingLib.sol";
-import {TestBase} from "test/TestBase.sol";
+import {TestBase} from "../TestBase.sol";
 
 // Contract to perform the swaps - electing to scale to the current balance of the src token or not.
 contract PendleRouterSwapBalance {
