@@ -1,0 +1,4 @@
+{
+    "detectors_to_exclude": "assembly,cyclomatic-complexity",
+    "filter_paths": "(test/|lib/)"
+}
