@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.28;
 
 import {Test, StdChains} from "forge-std/Test.sol";
 import {Order} from "pendle-core-v2-public/contracts/interfaces/IPLimitRouter.sol";
@@ -64,9 +64,12 @@ contract TestBase is Test {
         }
     }
 
+    function testDataPath() internal virtual view returns (string memory) {
+        return string.concat(vm.projectRoot(), "/test/calldata.json");
+    }
+
     function loadTestItems() internal view returns (CalldataItem[] memory items) {
-        string memory path = string.concat(vm.projectRoot(), "/test/calldata.json");
-        string memory rawJson = vm.readFile(path);
+        string memory rawJson = vm.readFile(testDataPath());
         bytes memory data = vm.parseJson(rawJson);
         return abi.decode(data, (CalldataItem[]));
     }
@@ -83,10 +86,9 @@ contract TestBase is Test {
         return amount * 1.05e18 / 1e18;
     }
 
-    function sub2Pct(uint256 amount) internal pure returns (uint256) {
-        return amount * 0.98e18 / 1e18;
+    function sub3Pct(uint256 amount) internal pure returns (uint256) {
+        return amount * 0.97e18 / 1e18;
     }
-
 
     function isEqual(string memory a, string memory b) internal pure returns (bool) {
         return keccak256(bytes(a)) == keccak256(bytes(b));

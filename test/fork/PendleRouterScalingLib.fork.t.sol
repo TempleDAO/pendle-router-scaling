@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.28;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -74,12 +74,13 @@ contract PendleRouterScalingLibForkTest is TestBase {
     PendleRouterSwapBalance public balanceRouter;
 
     address receiver;
+    uint256 snapId;
 
     // Got more than expected
-    uint256 public constant TOLERANCE_MORE = 0.05e18; // 5%
+    uint256 public constant TOLERANCE_MORE = 0.0001e18; // 0.01%
     
     // Got less than expected
-    uint256 public constant TOLERANCE_LESS = 0.025e18; // 2.5%
+    uint256 public constant TOLERANCE_LESS = 0.0004e18; // 0.04%
     
     function setUp() public {
         CalldataItem[] memory testItems = loadTestItems();
@@ -99,13 +100,19 @@ contract PendleRouterScalingLibForkTest is TestBase {
                 revert("All test cases need the same 'from'");
             }
         }
-    }
 
-    function etchRouter() internal {
+        fork("mainnet", forkBlockNumber);
+
         // Etch the router onto the receiver address that was used when generating the test cases
-        PendleRouterSwapBalance br = new PendleRouterSwapBalance(PENDLE_ROUTER_V4);
-        vm.etch(receiver, address(br).code);
-        balanceRouter = PendleRouterSwapBalance(receiver);
+        {
+            PendleRouterSwapBalance br = new PendleRouterSwapBalance(PENDLE_ROUTER_V4);
+            vm.etch(receiver, address(br).code);
+            balanceRouter = PendleRouterSwapBalance(receiver);
+        }
+
+        // Snapshot the state so it can easily be restored.
+        // NB: vm.rollFork() didn't reset all the state before
+        snapId = vm.snapshotState();
     }
 
     // No change to calldata, deal existing amounts
@@ -113,17 +120,14 @@ contract PendleRouterScalingLibForkTest is TestBase {
         CalldataItem[] memory testItems = loadTestItems();
 
         for (uint256 i; i < testItems.length; ++i) {
+            vm.revertToState(snapId);
             CalldataItem memory item = testItems[i];
-            fork("mainnet", item.blockNumber);
-            etchRouter();
-
             string memory itemKey = string(bytes.concat(bytes(vm.toString(i)), " ", bytes(item.method)));
 
             // Deal exact tokens and call swap. Ensure the router starts with zero tokenOut
             uint256 dealtAmount = item.amountInBN;
             deal(item.tokenInAddr, item.from, dealtAmount);
             deal(item.tokenOutAddr, address(balanceRouter), 0);
-
 
             balanceRouter.swap(item.to, item.tokenInAddr, item.data);
 
@@ -144,10 +148,8 @@ contract PendleRouterScalingLibForkTest is TestBase {
         CalldataItem[] memory testItems = loadTestItems();
 
         for (uint256 i; i < testItems.length; ++i) {
+            vm.revertToState(snapId);
             CalldataItem memory item = testItems[i];
-            fork("mainnet", item.blockNumber);
-            etchRouter();
-            
             string memory itemKey = string(bytes.concat(bytes(vm.toString(i)), " ", bytes(item.method)));
 
             // Deal an extra 5% of tokens and call swap. Ensure the router starts with zero tokenOut
@@ -174,13 +176,11 @@ contract PendleRouterScalingLibForkTest is TestBase {
         CalldataItem[] memory testItems = loadTestItems();
 
         for (uint256 i; i < testItems.length; ++i) {
+            vm.revertToState(snapId);
             CalldataItem memory item = testItems[i];
-            fork("mainnet", item.blockNumber);
-            etchRouter();
-
             string memory itemKey = string(bytes.concat(bytes(vm.toString(i)), " ", bytes(item.method)));
 
-            // Deal exact tokens and call swap. Ensure the router starts with zero tokenOut
+            // Deal exact tokens and call swapBalance. Ensure the router starts with zero tokenOut
             uint256 dealtAmount = item.amountInBN;
             deal(item.tokenInAddr, item.from, dealtAmount);
             deal(item.tokenOutAddr, address(balanceRouter), 0);
@@ -210,16 +210,14 @@ contract PendleRouterScalingLibForkTest is TestBase {
         CalldataItem[] memory testItems = loadTestItems();
 
         // We get an extra amount of output tokens when we deal extra
-        uint256 _TOLERANCE_MORE = 0.08e18;
+        uint256 _TOLERANCE_MORE = 0.06e18; // 6%
 
         for (uint256 i; i < testItems.length; ++i) {
+            vm.revertToState(snapId);
             CalldataItem memory item = testItems[i];
-            fork("mainnet", item.blockNumber);
-            etchRouter();
-
             string memory itemKey = string(bytes.concat(bytes(vm.toString(i)), " ", bytes(item.method)));
 
-            // Deal an extra 5% of tokens and call swap. Ensure the router starts with zero tokenOut
+            // Deal an extra 5% of tokens and call swapBalance. Ensure the router starts with zero tokenOut
             uint256 dealtAmount = add5Pct(item.amountInBN);
             deal(item.tokenInAddr, item.from, dealtAmount);
             deal(item.tokenOutAddr, address(balanceRouter), 0);
@@ -249,17 +247,15 @@ contract PendleRouterScalingLibForkTest is TestBase {
         CalldataItem[] memory testItems = loadTestItems();
 
         // We get LESS amount of output tokens when we dont deal as much
-        uint256 _TOLERANCE_LESS = 0.04e18;
+        uint256 _TOLERANCE_LESS = 0.04e18; // 4%
 
         for (uint256 i; i < testItems.length; ++i) {
+            vm.revertToState(snapId);
             CalldataItem memory item = testItems[i];
-            fork("mainnet", item.blockNumber);
-            etchRouter();
-
             string memory itemKey = string(bytes.concat(bytes(vm.toString(i)), " ", bytes(item.method)));
 
-            // Deal an extra 5% of tokens and call swap. Ensure the router starts with zero tokenOut
-            uint256 dealtAmount = sub2Pct(item.amountInBN);
+            // Deal 3% less of the tokens and call swapBalance. Ensure the router starts with zero tokenOut
+            uint256 dealtAmount = sub3Pct(item.amountInBN);
             deal(item.tokenInAddr, item.from, dealtAmount);
             deal(item.tokenOutAddr, address(balanceRouter), 0);
 

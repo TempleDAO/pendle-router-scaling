@@ -1,0 +1,4 @@
+# Install with:
+#   pip install -r slither.requirements.txt
+solc-select==1.1.0
+slither-analyzer==0.11.3
