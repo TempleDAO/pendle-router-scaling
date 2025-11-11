@@ -97,7 +97,7 @@ library PendleRouterScalingLib {
             */
 
             // sell amount == params.input.netTokenIn (word 1 within TokenInput)
-            //   4 byte selector + 11 x 32 byte slots = 365
+            //   4 byte selector + 11 x 32 byte slots = 356
             sellAmountOffset = 356;
 
             // min buy amount == params.minPtOut
@@ -168,7 +168,7 @@ library PendleRouterScalingLib {
             )
             */
             // sell amount == params.input.netTokenIn (word 1 within TokenInput)
-            //   4 byte selector + 11 x 32 byte slots = 365
+            //   4 byte selector + 11 x 32 byte slots = 356
             sellAmountOffset = 356;
 
             // min buy amount == params.minYtOut
