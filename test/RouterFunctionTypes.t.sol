@@ -6,11 +6,11 @@ import {
     TokenInput,
     TokenOutput,
     LimitOrderData
-} from "pendle-core-v2-public/contracts/interfaces/IPAllActionTypeV3.sol";
+} from "external/pendle/interfaces/IPAllActionTypeV3.sol";
 import {
     IPSwapAggregator,
     SwapDataExtra
-} from "pendle-core-v2-public/contracts/router/swap-aggregator/IPSwapAggregator.sol";
+} from "external/pendle/router/swap-aggregator/IPSwapAggregator.sol";
 
 struct SwapExactTokenForPt {
     address receiver;

@@ -4,8 +4,8 @@ pragma solidity ^0.8.28;
 import {TestBase} from "./TestBase.sol";
 
 import {stdError} from "forge-std/StdError.sol";
-import {SwapType, SwapData} from "pendle-core-v2-public/contracts/router/swap-aggregator/IPSwapAggregator.sol";
-import {IPActionSwapYTV3} from "pendle-core-v2-public/contracts/interfaces/IPActionSwapYTV3.sol";
+import {SwapType, SwapData} from "external/pendle/router/swap-aggregator/IPSwapAggregator.sol";
+import {IPActionSwapYTV3} from "external/pendle/interfaces/IPActionSwapYTV3.sol";
 
 import {PendleRouterScalingLib} from "src/PendleRouterScalingLib.sol";
 import "./RouterFunctionEncoderLib.t.sol";

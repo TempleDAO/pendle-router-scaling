@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.28;
 
-import {IPActionMiscV3} from "pendle-core-v2-public/contracts/interfaces/IPActionMiscV3.sol";
-import {IPActionSwapPTV3} from "pendle-core-v2-public/contracts/interfaces/IPActionSwapPTV3.sol";
-import {IPActionSwapYTV3} from "pendle-core-v2-public/contracts/interfaces/IPActionSwapYTV3.sol";
+import {IPActionMiscV3} from "external/pendle/interfaces/IPActionMiscV3.sol";
+import {IPActionSwapPTV3} from "external/pendle/interfaces/IPActionSwapPTV3.sol";
+import {IPActionSwapYTV3} from "external/pendle/interfaces/IPActionSwapYTV3.sol";
 import {
     SwapExactTokenForPt,
     SwapExactPtForToken,
@@ -24,12 +24,12 @@ import {
     TokenInput,
     TokenOutput,
     LimitOrderData
-} from "pendle-core-v2-public/contracts/interfaces/IPAllActionTypeV3.sol";
+} from "external/pendle/interfaces/IPAllActionTypeV3.sol";
 import {
     SwapData,
     IPSwapAggregator,
     SwapDataExtra
-} from "pendle-core-v2-public/contracts/router/swap-aggregator/IPSwapAggregator.sol";
+} from "external/pendle/router/swap-aggregator/IPSwapAggregator.sol";
 
 library RouterFunctionEncoderLib {
     error WrongSelector(bytes4 expected, bytes4 got);
