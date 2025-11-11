@@ -2,15 +2,15 @@
 pragma solidity ^0.8.28;
 
 import {Test, StdChains} from "forge-std/Test.sol";
-import {Order} from "pendle-core-v2-public/contracts/interfaces/IPLimitRouter.sol";
+import {Order} from "external/pendle/interfaces/IPLimitRouter.sol";
 import {
     ApproxParams,
     TokenInput,
     TokenOutput,
     LimitOrderData
-} from "pendle-core-v2-public/contracts/interfaces/IPAllActionTypeV3.sol";
-import {SwapData} from "pendle-core-v2-public/contracts/router/swap-aggregator/IPSwapAggregator.sol";
-import {IPActionMiscV3} from "pendle-core-v2-public/contracts/interfaces/IPActionMiscV3.sol";
+} from "external/pendle/interfaces/IPAllActionTypeV3.sol";
+import {SwapData} from "external/pendle/router/swap-aggregator/IPSwapAggregator.sol";
+import {IPActionMiscV3} from "external/pendle/interfaces/IPActionMiscV3.sol";
 
 contract TestBase is Test {
     error UnhandledFunction(string functionName);

@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.28;
 
-import {IPActionMiscV3} from "pendle-core-v2-public/contracts/interfaces/IPActionMiscV3.sol";
-import {IPActionSwapPTV3} from "pendle-core-v2-public/contracts/interfaces/IPActionSwapPTV3.sol";
-import {IPActionSwapYTV3} from "pendle-core-v2-public/contracts/interfaces/IPActionSwapYTV3.sol";
+import {IPActionMiscV3} from "external/pendle/interfaces/IPActionMiscV3.sol";
+import {IPActionSwapPTV3} from "external/pendle/interfaces/IPActionSwapPTV3.sol";
+import {IPActionSwapYTV3} from "external/pendle/interfaces/IPActionSwapYTV3.sol";
 import {BytesLib} from "./BytesLib.sol";
 
 /// @title Pendle Router Calldata Scaling Library
